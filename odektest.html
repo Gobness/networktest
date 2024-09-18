@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Networking Test for Beginners</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        #quizPage {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #progressBar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            margin-bottom: 20px;
+        }
+        #progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.5s;
+        }
+        #timerDisplay {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        #submitQuiz {
+            display: block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #resultPage {
+            display: none;
+        }
+        .logo {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <img src="odek_logo.png" alt="ODEK Technologies Logo" class="logo">
+
+    <div id="quizPage">
+        <h1>Basic Networking Test for Beginners</h1>
+        
+        <form id="userInfoForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" name="surname" required><br><br>
+        </form>
+        
+        <div id="timerDisplay">Time Remaining: <span id="time">30:00</span></div>
+        <div id="progressBar">
+            <div id="progress"></div>
+        </div>
+        
+        <div id="quiz">
+            <!-- Quiz questions will be dynamically inserted here -->
+        </div>
+        
+        <button id="submitQuiz">Submit Quiz</button>
+    </div>
+
+    <div id="resultPage">
+        <h1>Test Results</h1>
+        <div id="result"></div>
+        <p>Thank you for taking the test.</p>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What does IP stand for in the context of computer networking?",
+                options: ["Internet Protocol", "Internal Processing", "Information Packet", "Input Port"],
+                answer: 0
+            },
+            {
+                question: "What is the purpose of a router in a network?",
+                options: ["To connect different networks and direct data between them", "To provide wireless internet access", "To store data for quick access", "To encrypt network traffic"],
+                answer: 0
+            },
+            {
+                question: "Which layer of the OSI model is responsible for logical addressing and routing?",
+                options: ["Physical Layer", "Data Link Layer", "Network Layer", "Transport Layer"],
+                answer: 2
+            },
+            {
+                question: "What is the maximum number of IP addresses available in a Class C network?",
+                options: ["126", "254", "510", "1022"],
+                answer: 1
+            },
+            {
+                question: "Which protocol is used for sending email?",
+                options: ["HTTP", "FTP", "SMTP", "TCP"],
+                answer: 2
+            },
+            {
+                question: "What does DNS stand for?",
+                options: ["Dynamic Network System", "Domain Name System", "Data Network Service", "Distributed Node Server"],
+                answer: 1
+            },
+            {
+                question: "Which of the following is an example of a private IP address?",
+                options: ["8.8.8.8", "192.168.1.1", "203.0.113.1", "74.125.0.1"],
+                answer: 1
+            },
+            {
+                question: "What is the primary function of a firewall?",
+                options: ["To speed up internet connection", "To block unauthorized access and protect the network", "To distribute IP addresses", "To compress data for faster transmission"],
+                answer: 1
+            },
+            {
+                question: "Which network device operates at the Data Link Layer of the OSI model?",
+                options: ["Router", "Switch", "Modem", "Repeater"],
+                answer: 1
+            },
+            {
+                question: "What is the function of the command prompt in Windows?",
+                options: ["To access the internet", "To display system information", "To watch videos", "To execute commands directly by typing them"],
+                answer: 3
+            },
+            {
+                question: "You're troubleshooting a network connection issue and suspect a problem with the Ethernet cable. What's the first step you should take?",
+                options: ["Replace the cable immediately", "Check if the cable is properly connected at both ends", "Run a network diagnostic software", "Restart the computer"],
+                answer: 1
+            },
+            {
+                question: "What is the function of a NIC?",
+                options: ["To store data", "To connect a computer to a network", "To increase CPU speed", "To manage user accounts"],
+                answer: 1
+            },
+            {
+                question: "What is Wi-Fi?",
+                options: ["A type of wired network", "A wireless networking technology", "A method for encrypting data", "A software used for managing networks"],
+                answer: 1
+            },
+            {
+                question: "What is cloud computing?",
+                options: ["A technology for wireless connections", "To connect a computer to a network", "A way to store data in local drives", "Delivery of computing services over the Internet"],
+                answer: 3
+            },
+            {
+                question: "What is an IP address?",
+                options: ["A unique identifier for a network device", "A computer’s serial number", "A number assigned to websites only", "A type of hardware address"],
+                answer: 0
+            },
+            {
+                question: "What is the purpose of a subnet mask?",
+                options: ["To encrypt data", "To increase network speed", "To divide an IP address into network and host portions", "To detect network errors"],
+                answer: 2
+            },
+            {
+                question: "What is DHCP?",
+                options: ["Dynamic Host Configuration Protocol", "Data Host Configuration Process", "Dynamic Hypertext Communication Protocol", "Data Handling Control Protocol"],
+                answer: 0
+            },
+            {
+                question: "What is the function of the ipconfig command in Windows?",
+                options: ["To configure the router settings", "To test network connectivity", "To update network drivers", "To display network configuration details"],
+                answer: 3
+            },
+            {
+                question: "What is a gateway in networking?",
+                options: ["A device that manages IP addresses", "A device that connects different networks", "A server for hosting websites", "A type of firewall"],
+                answer: 1
+            },
+            {
+                question: "What is the purpose of NAT?",
+                options: ["To manage user accounts", "To translate private IP addresses to a public IP address", "To increase network speed", "To secure the network from external threats"],
+                answer: 1
+            },
+            {
+                question: "What does HTTPS stand for?",
+                options: ["HyperText Transfer Protocol Safe", "HyperText Transmission Secure", "HyperText Transfer Protocol Secure", "Host Transfer Transmission Secure"],
+                answer: 2
+            },
+            {
+                question: "You receive an error message saying, Destination Host Unreachable, when pinging a device on your network. What could be the issue?",
+                options: ["The device is turned off", "The network cable is disconnected", "There is a firewall blocking the ping", "All of the above"],
+                answer: 3
+            },
+            {
+                question: "What is a switch in networking?",
+                options: ["A device that connects devices within a network using MAC addresses", "A device that connects to the internet", "A software used for managing networks", "A type of router"],
+                answer: 0
+            },
+            {
+                question: "What is a VLAN?",
+                options: ["Virtual Large Area Network", "Virtual Local Area Network", "Visual Local Area Network", "Virtual Long Access Network"],
+                answer: 1
+            },
+            {
+                question: "What is an SSID?",
+                options: ["Server Set Identifier", "Secure Set Identifier", "Service Set Identifier", "Security Set Identifier"],
+                answer: 2
+            },
+            {
+                question: "What does VoIP stand for?",
+                options: ["Video over Internet Protocol", "Virtual over Internet Protocol", "Voice over Internet Protocol", "Voice over Internal Protocol"],
+                answer: 2
+            },
+            {
+                question: "What is the purpose of a domain controller?",
+                options: ["To manage files", "To respond to security authentication requests", "To store website data", "To connect devices to a network"],
+                answer: 1
+            },
+            {
+                question: "What is a MAC address?",
+                options: ["A unique identifier assigned to a network interface card (NIC)", "A type of IP address", "A security protocol", "A brand of computer"],
+                answer: 0
+            },
+            {
+                question: "What is the purpose of a network firewall?",
+                options: ["To allow all network traffic", "To monitor and control incoming and outgoing network traffic", "To increase network speed", "To compress data"],
+                answer: 1
+            },
+            {
+                question: "What is the function of a proxy server?",
+                options: ["To connect to a VPN", "To act as an intermediary between a client and a server", "To encrypt data", "To host a website"],
+                answer: 1
+            }
+        ];
+
+        const totalQuestions = questions.length;
+
+        function loadQuiz() {
+            const quizDiv = document.getElementById('quiz');
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <p>Q${index + 1}: ${q.question}</p>
+                    ${q.options.map((option, i) => `
+                        <label>
+                            <input type="radio" name="q${index}" value="${i}" onchange="updateProgressBar()">
+                            ${option}
+                        </label><br>
+                    `).join('')}
+                `;
+                quizDiv.appendChild(questionDiv);
+            });
+        }
+
+        function updateProgressBar() {
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+            const progress = document.getElementById('progress');
+            progress.style.width = `${progressPercentage}%`;
+        }
+
+        function submitQuiz() {
+            const quizPage = document.getElementById('quizPage');
+            const resultPage = document.getElementById('resultPage');
+            const resultDiv = document.getElementById('result');
+
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected && parseInt(selected.value) === q.answer) {
+                    score++;
+                }
+            });
+
+            const name = document.getElementById('name').value;
+            const surname = document.getElementById('surname').value;
+
+            resultDiv.innerHTML = `
+                <p>Your score: ${score} out of ${totalQuestions}</p>
+                <p>Percentage: ${(score / totalQuestions * 100).toFixed(2)}%</p>
+            `;
+
+            quizPage.style.display = 'none';
+            resultPage.style.display = 'block';
+
+            // Export results to CSV
+            exportResultsToCSV(name, surname, score, totalQuestions);
+        }
+
+        function exportResultsToCSV(name, surname, score, totalQuestions) {
+            const date = new Date();
+            const formattedDate = date.toISOString().slice(0, 10);
+            const filename = `${name}_${surname}_${formattedDate}.csv`;
+
+            const csvContent = `Name,Surname,Date,Score,Total Questions,Percentage\n${name},${surname},${formattedDate},${score},${totalQuestions},${((score / totalQuestions) * 100).toFixed(2)}%\n`;
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        function startTimer(duration) {
+            let timer = duration, minutes, seconds;
+            const timerDisplay = document.getElementById('time');
+            const intervalId = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                timerDisplay.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(intervalId);
+                    submitQuiz(); // Auto-submit the quiz when the time runs out
+                }
+            }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuiz();
+            startTimer(30 * 60); // 30-minute timer
+            updateProgressBar();
+        });
+
+        document.getElementById('submitQuiz').addEventListener('click', submitQuiz);
+    </script>
+</body>
+</html>
